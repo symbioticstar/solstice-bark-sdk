@@ -22,10 +22,12 @@
     "build": "tsc -p tsconfig.json",
     "lint": "oxlint \"src/**/*.ts\"",
     "format": "oxfmt",
-    "prepare": "husky install"
+    "prepare": "husky",
+    "lint-staged": "lint-staged"
   },
   "devDependencies": {
     "husky": "^9.0.0",
+    "lint-staged": "^15.0.0",
     "oxfmt": "^0.5.0",
     "oxlint": "^0.5.0",
     "typescript": "^5.6.0"
@@ -33,5 +35,17 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "pnpm@9.0.0"
+  "packageManager": "pnpm@9.0.0",
+  "lint-staged": {
+    "src/**/*.ts": [
+      "oxlint",
+      "oxfmt"
+    ],
+    "docs/**/*.md": [
+      "oxfmt"
+    ],
+    "README.md": [
+      "oxfmt"
+    ]
+  }
 }
