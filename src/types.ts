@@ -1,5 +1,7 @@
 export type BarkLevel = "critical" | "active" | "timeSensitive" | "passive";
 
+export type BarkEncryptionAlgorithm = "aes-128-gcm";
+
 export interface BarkNotification {
   title?: string;
   subtitle?: string;
@@ -54,7 +56,7 @@ export interface BarkErrorResponse {
 export type BarkApiResponse = BarkSuccessResponse | BarkErrorResponse;
 
 export interface BarkEncryptionConfig {
-  algorithm: string;
+  algorithm: BarkEncryptionAlgorithm;
   key: string;
   iv: string;
 }

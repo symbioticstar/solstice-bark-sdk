@@ -3,12 +3,6 @@ import type { BarkEncryptionConfig, BarkNotification } from "./types.js";
 
 const encoder = new TextEncoder();
 
-const algorithmLengths: Record<string, number> = {
-  "aes-128-cbc": 128,
-  "aes-192-cbc": 192,
-  "aes-256-cbc": 256,
-};
-
 type NodeBufferLike = {
   from(data: Uint8Array): { toString(encoding: "base64"): string };
 };
@@ -44,36 +38,31 @@ export const encryptPayload = async (
 
   const keyBytes = encoder.encode(config.key);
   const ivBytes = encoder.encode(config.iv);
-  const expectedLength = algorithmLengths[config.algorithm];
 
-  if (keyBytes.length * 8 !== expectedLength) {
+  // AES-128-GCM requires 16-byte (128-bit) key
+  if (keyBytes.length !== 16) {
     throw new BarkClientError(
-      "Encryption key length does not match algorithm.",
+      "Encryption key must be 16 bytes for AES-128-GCM.",
       {
         code: "E_ENCRYPTION_INVALID_KEY",
       },
     );
   }
 
-  if (ivBytes.length !== 16) {
-    throw new BarkClientError("Encryption iv must be 16 bytes.", {
-      code: "E_ENCRYPTION_INVALID_IV",
-    });
-  }
-
   const cryptoKey = await subtle.importKey(
     "raw",
     keyBytes,
-    { name: "AES-CBC", length: expectedLength },
+    { name: "AES-GCM", length: 128 },
     false,
     ["encrypt"],
   );
 
   const data = encoder.encode(JSON.stringify(payload));
   const encrypted = await subtle.encrypt(
-    { name: "AES-CBC", iv: ivBytes },
+    { name: "AES-GCM", iv: ivBytes },
     cryptoKey,
     data,
   );
+
   return toBase64(encrypted);
 };
