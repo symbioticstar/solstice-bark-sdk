@@ -3,7 +3,7 @@ import type { BarkEncryptionConfig, BarkNotification } from "./types.js";
 
 const encoder = new TextEncoder();
 
-const algorithmLengths: Record<BarkEncryptionConfig["algorithm"], number> = {
+const algorithmLengths: Record<string, number> = {
   "aes-128-cbc": 128,
   "aes-192-cbc": 192,
   "aes-256-cbc": 256,

@@ -53,13 +53,8 @@ export interface BarkErrorResponse {
 
 export type BarkApiResponse = BarkSuccessResponse | BarkErrorResponse;
 
-export type BarkEncryptionAlgorithm =
-  | "aes-128-cbc"
-  | "aes-192-cbc"
-  | "aes-256-cbc";
-
 export interface BarkEncryptionConfig {
-  algorithm: BarkEncryptionAlgorithm;
+  algorithm: string;
   key: string;
   iv: string;
 }
